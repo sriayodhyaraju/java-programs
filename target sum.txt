@@ -1,0 +1,30 @@
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        unordered_map<string, int> memo;
+        return dfs(nums, 0, 0, target, memo);
+    }
+
+private:
+    int dfs(vector<int>& nums, int index, int currentSum, int target, unordered_map<string, int>& memo) {
+        string key = to_string(index) + "," + to_string(currentSum);
+        
+        if (memo.find(key) != memo.end()) {
+            return memo[key];
+        }
+
+        if (index == nums.size()) {
+            return currentSum == target ? 1 : 0;
+        }
+
+        int add = dfs(nums, index + 1, currentSum + nums[index], target, memo);
+        int subtract = dfs(nums, index + 1, currentSum - nums[index], target, memo);
+
+        memo[key] = add + subtract;
+        return memo[key];
+    }
+};
