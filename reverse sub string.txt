@@ -1,0 +1,29 @@
+#include <string>
+#include <stack>
+using namespace std;
+
+class Solution {
+public:
+    string reverseParentheses(string s) {
+        stack<string> st;
+        st.push("");
+
+        for (char c : s) {
+            if (c == '(') {
+                // Start a new substring context
+                st.push("");
+            } else if (c == ')') {
+                // End current substring and reverse it
+                string cur = st.top();
+                st.pop();
+                reverse(cur.begin(), cur.end());
+                st.top() += cur;  // Append reversed substring to previous level
+            } else {
+                // Append character to current substring
+                st.top() += c;
+            }
+        }
+
+        return st.top();
+    }
+};

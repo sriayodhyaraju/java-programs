@@ -1,0 +1,39 @@
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<string> reorderLogFiles(vector<string>& logs) {
+        auto isDigitLog = [](const string& log) {
+            int pos = log.find(' ');
+            return isdigit(log[pos + 1]);
+        };
+
+        sort(logs.begin(), logs.end(), [&](const string& a, const string& b) {
+            bool aIsDigit = isDigitLog(a);
+            bool bIsDigit = isDigitLog(b);
+
+            // Both digit-logs: maintain original order (stable)
+            if (aIsDigit && bIsDigit) return false;
+
+            // One digit, one letter: letter-log comes first
+            if (aIsDigit != bIsDigit) return !aIsDigit;
+
+            // Both letter-logs: compare content then identifier
+            int posA = a.find(' ');
+            int posB = b.find(' ');
+            string idA = a.substr(0, posA);
+            string idB = b.substr(0, posB);
+            string contentA = a.substr(posA + 1);
+            string contentB = b.substr(posB + 1);
+
+            if (contentA == contentB)
+                return idA < idB;
+            return contentA < contentB;
+        });
+
+        return logs;
+    }
+};
